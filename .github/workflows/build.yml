@@ -12,7 +12,7 @@ jobs:
     - name: Install dependencies
       run: |
         pacman -Syu --noconfirm git fontforge curl p7zip jq
-        python -m pip install requests
+        python3 -m pip install requests
 
     - uses: actions/checkout@v2
     - name: Grab latest version
