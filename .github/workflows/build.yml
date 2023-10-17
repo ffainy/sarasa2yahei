@@ -10,7 +10,7 @@ jobs:
     container: archlinux:latest
     steps:
     - name: Install dependencies
-      run: pacman -Syu --noconfirm git fontforge curl p7zip jq
+      run: pacman -Syu --noconfirm git fontforge curl p7zip jq requests
 
     - uses: actions/checkout@v2
     - name: Grab latest version
