@@ -69,7 +69,7 @@ jobs:
       uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "upstream-$UPSTREAM_VERSION"
+        automatic_release_tag: "upstream-${{ env.UPSTREAM_VERSION }}"
         prerelease: false
-        title: $UPSTREAM_VERSION
+        title: ${{ env.UPSTREAM_VERSION }}
         files: sarasa2yahei.7z
