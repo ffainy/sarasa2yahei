@@ -11,9 +11,18 @@ jobs:
 
     steps:
 
+    - uses: actions/checkout@v3
+
     - name: Install dependencies
-      run: pacman -Syu --noconfirm git fontforge curl wget py7zr p7zip jq requests
-    - uses: actions/checkout@v2
+      run: pacman -Syu --noconfirm git fontforge curl wget p7zip jq
+
+    - uses: actions/setup-python@v4
+    - uses: BSFishy/pip-action@v1
+      with:
+        packages: |
+                py7zr
+                requests
+        upgrade: true
 
     - name: Grab latest version
       run: |
