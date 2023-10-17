@@ -7,28 +7,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: archlinux:latest
+
     steps:
 
-    # - name: Grab latest version
-    #   run: |
-    #     curl -L https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest -o api.json
-    #     UPSTREAM_VERSION=$(cat api.json | jq -r .tag_name)
-    #     DOWNLOAD_URL=$(cat api.json | jq -r '.assets[] | select(.name | test("sarasa-gothic-ttc-(?!unhinted)")) | .browser_download_url')
-    #     echo "UPSTREAM_VERSION=$UPSTREAM_VERSION" >> $GITHUB_ENV
-    #     echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+    - name: Install dependencies
+      run: pacman -Syu --noconfirm git fontforge curl wget py7zr p7zip jq requests
+    - uses: actions/checkout@v2
+
+    - name: Grab latest version
+      run: |
+        curl -L https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest -o api.json
+        UPSTREAM_VERSION=$(cat api.json | jq -r .tag_name)
+        DOWNLOAD_URL=$(cat api.json | jq -r '.assets[] | select(.name | test("sarasa-gothic-ttc-(?!unhinted)")) | .browser_download_url')
+        echo "UPSTREAM_VERSION=$UPSTREAM_VERSION" >> $GITHUB_ENV
+        echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
 
 
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - uses: BSFishy/pip-action@v1
-      with:
-        packages: |
-          wget
-          py7zr
-          requests
-          fontforge
-        upgrade: true
-    - run: python3 sarasa2yahei.py
+    # - uses: actions/checkout@v3
+    # - uses: actions/setup-python@v4
+    # - uses: BSFishy/pip-action@v1
+    #   with:
+    #     packages: |
+    #       wget
+    #       py7zr
+    #       requests
+    #       fontforge
+    #     upgrade: true
+    # - run: python3 sarasa2yahei.py
 
 
 
