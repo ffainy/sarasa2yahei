@@ -15,18 +15,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pacman -Syu --noconfirm git fontforge curl wget p7zip jq
+        pacman -Syu --noconfirm git fontforge curl wget p7zip jq python-py7zr python-requests
 
 
-    - uses: actions/setup-python@v4
 
-
-    - uses: BSFishy/pip-action@v1
-      with:
-        packages: |
-                py7zr
-                requests
-        upgrade: true
 
     - name: Grab latest version
       run: |
