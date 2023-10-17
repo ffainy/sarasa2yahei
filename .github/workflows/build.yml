@@ -24,7 +24,6 @@ jobs:
       with:
         packages: |
           wget
-          json
           py7zr
           requests
           fontforge
