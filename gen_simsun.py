@@ -86,6 +86,6 @@ def gen_simsun_ext():
 
 
 if __name__ == '__main__':
-    gen_simsun.gen_simsun()
-    gen_simsun.gen_simsun_ext()
+    gen_simsun()
+    gen_simsun_ext()
     print('simsun generated')
