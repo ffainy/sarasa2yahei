@@ -1,0 +1,77 @@
+name: build sarasa2yahei cl
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -y fontforge python3-fontforge p7zip-full
+
+      - name: Get Local Version
+        run: |
+          LOCAL_VERSION=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
+          echo "LOCAL_VERSION=${LOCAL_VERSION}" >> $GITHUB_ENV
+
+      - name: Get Upstream Version
+        run: |
+          UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
+          echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
+
+      - name: Compare Version
+        run: |
+          echo ${LOCAL_VERSION} && echo ${UPSTREAM_VERSION}
+          if ["${LOCAL_VERSION}" == "${UPSTREAM_VERSION}"]; then
+            exit 0
+          fi
+
+      - name: Get Download URL
+        run: |
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
+          echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
+          echo ${DOWNLOAD_URL}
+
+      - name: Download and Extract Fonts
+        run: |
+          mkdir /tmp/fonts
+          mkdir /tmp/fonts/cl
+          cd /tmp/fonts
+          curl -Lvo fonts.7z $DOWNLOAD_URL
+          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
+
+      - name: Run script
+        run: |
+          python3 exec.py
+
+      - name: Create cl archives
+        run: |
+          cd /tmp/fonts/cl
+          ls -a
+          7z a yahei-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z msyh*
+          7z a simsun-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z simsun*
+          7z a all-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
+          ls -a
+
+      - name: Create hash
+        run: |
+          touch /tmp/fonts/.hash
+          find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/.hash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.UPSTREAM_VERSION }}
+          prerelease: false
+          name: sarasa2yahei-unhinted-${{ env.UPSTREAM_VERSION }}
+          files: |
+            /tmp/fonts/hash
+            /tmp/fonts/cl/*.7z
