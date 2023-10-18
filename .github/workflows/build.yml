@@ -50,8 +50,8 @@ jobs:
     # - name: Extract font
     #   run: 7z x -odata /tmp/ttc.7z
 
-    # - name: Run script
-    #   run: python3 sarasa2yahei.py
+    - name: Run script
+      run: python3 sarasa2yahei.py
 
     # - name: Compress font
     #   run: |
@@ -62,7 +62,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: sarasa2yahei
-        path: out
+        path: /tmp/sarasafonts/out
 
     - name: Upload release
       uses: marvinpinto/action-automatic-releases@latest
