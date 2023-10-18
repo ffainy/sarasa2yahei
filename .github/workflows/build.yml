@@ -12,26 +12,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.10'
-      # - run: python3 --version && python3 -m pip --version
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: python3 --version && python3 -m pip --version
 
-      # - name: Install Dependencies
-      #   run: |
-      #     pip install --upgrade pip
-      #     sudo apt-get install -y fontforge python3-fontforge
-      #     sudo apt-get install p7zip
-      #     apt list | grep fontforge
-      #     fontforge --version
-      #     /usr/bin/python3 -c "import fontforge;print(fontforge)"
-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          sudo apt-get install -y python2.7 python-pip fontforge
-          python --version && python -m pip --version && fontforge --version
-          python -m pip install configparser
+          pip install --upgrade pip
+          pip install configparser
+          sudo apt-get install -y fontforge python3-fontforge
+          fontforge --version
+
+
+
 
       # - name: Get Upstream Version
       #   run: |
