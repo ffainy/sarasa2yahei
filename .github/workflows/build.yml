@@ -61,20 +61,19 @@ jobs:
           7z a all-cl-unhinted.7z *.ttc *.ttf
           ls -a
 
-      - name: Create sc archives
-        run: |
-          cd /tmp/fonts/sc
-          ls -a
-          7z a yahei-sc-unhinted.7z msyh*
-          7z a simsun_sc-unhinted.7z simsun*
-          7z a all_sc-unhinted.7z *.ttc *.ttf
-          ls -a
+      # - name: Create sc archives
+      #   run: |
+      #     cd /tmp/fonts/sc
+      #     ls -a
+      #     7z a yahei-sc-unhinted.7z msyh*
+      #     7z a simsun_sc-unhinted.7z simsun*
+      #     7z a all_sc-unhinted.7z *.ttc *.ttf
+      #     ls -a
 
       - name: Create hash
         run: |
           touch /tmp/fonts/hash
           find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/hash
-          find /tmp/fonts/sc -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/hash
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -86,4 +85,3 @@ jobs:
           files: |
             /tmp/fonts/hash
             /tmp/fonts/cl/*.7z
-            /tmp/fonts/sc/*.7z
