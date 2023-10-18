@@ -54,28 +54,28 @@ jobs:
           mkdir /tmp/out
           python3 gen_yahei.py
 
-      # - name: Create sarasa2yahei.7z Archive
-      #   run: |
-      #     cd /tmp/out
-      #     7z a sarasa2yahei.7z *.ttc *.ttf
+      - name: Create sarasa2yahei.7z Archive
+        run: |
+          cd /tmp/out
+          7z a sarasa2yahei.7z *.ttc *.ttf
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ env.UPSTREAM_VERSION }}
-      #     release_name: Release ${{ env.UPSTREAM_VERSION }}
-      #     draft: false
-      #     prerelease: false
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.UPSTREAM_VERSION }}
+          release_name: Release ${{ env.UPSTREAM_VERSION }}
+          draft: false
+          prerelease: false
 
-      # - name: Upload Asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: /tmp/out/sarasa2yahei.7z
-      #     asset_name: sarasa2yahei.7z
-      #     asset_content_type: application/x-7z-compressed
+      - name: Upload Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /tmp/out/sarasa2yahei.7z
+          asset_name: sarasa2yahei.7z
+          asset_content_type: application/x-7z-compressed
