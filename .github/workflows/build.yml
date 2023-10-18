@@ -57,7 +57,7 @@ jobs:
           prerelease: false
           title: ${{ env.UPSTREAM_VERSION }}
           files: |
-            *.7z
+            /tmp/out*.7z
 
       # - name: Create Release
       #   id: create_release
