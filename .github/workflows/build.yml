@@ -48,7 +48,7 @@ jobs:
       - name: Run sarasa2yahei.py
         run: |
           mkdir /tmp/out
-          python gen_yahei.py
+          fontforge gen_yahei.py
 
       # - name: Create sarasa2yahei.7z Archive
       #   run: |
