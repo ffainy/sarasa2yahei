@@ -36,7 +36,7 @@ def gen_yahei_light_cl():
 def gen_yahei_bold_cl():
     fs.copy(utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf', utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold-ui.ttf')
 
-    font = utils.utils.open_font(utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf')
+    font = utils.open_font(utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf')
     utils.remove_gasp(font)
     utils.set_cleartype(font)
     utils.set_yahei_bold_names(font)
