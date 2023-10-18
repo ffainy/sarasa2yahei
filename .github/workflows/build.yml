@@ -20,9 +20,9 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
-          pip install configparser
-          sudo apt-get install -y fontforge python3-fontforge
+          sudo apt-get install -y software-properties-common
+          sudo apt-get install -y python3-fontforge
+          /usr/bin/python3 -c "import fontforge;print(fontforge)"
           fontforge --version
 
 
@@ -52,7 +52,7 @@ jobs:
       - name: Run sarasa2yahei.py
         run: |
           mkdir /tmp/out
-          python gen_yahei.py
+          python3 gen_yahei.py
 
       # - name: Create sarasa2yahei.7z Archive
       #   run: |
