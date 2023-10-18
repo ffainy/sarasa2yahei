@@ -29,11 +29,11 @@ jobs:
         echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
 
 
-    - name: Download original sarasa fonts
-      run: curl -Lvo /tmp/sarasafonts/ttc.7z $DOWNLOAD_URL
+    # - name: Download original sarasa fonts
+    #   run: curl -Lvo /tmp/sarasafonts/ttc.7z $DOWNLOAD_URL
 
-    - name: Extract original sarasa fonts
-      run: 7z x -odata /tmp/sarasafonts/ttc.7z
+    # - name: Extract original sarasa fonts
+    #   run: 7z x -odata /tmp/sarasafonts/ttc.7z
 
     - name: Run script
       run: python3 sarasa2yahei.py

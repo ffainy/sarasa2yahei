@@ -10,12 +10,12 @@ if __name__ == '__main__':
     ver = get_latest_sarasa.get_latest_tag()
     print('更纱黑体最新版本：' + ver)
 
-    # url = get_latest_sarasa.get_latest_url()
-    # path = get_latest_sarasa.download_sarasa(url)
-    # print('下载到本地：' + path)
+    url = get_latest_sarasa.get_latest_url()
+    path = get_latest_sarasa.download_sarasa(url)
+    print('下载到本地：' + path)
 
-    # get_latest_sarasa.unzip_sarasa(path)
-    # print('下载完成！')
+    get_latest_sarasa.unzip_sarasa(path)
+    print('下载完成！')
 
     gen_yahei.gen_yahei_regular()
     gen_yahei.gen_yahei_bold()
