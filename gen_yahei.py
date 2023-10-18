@@ -1,10 +1,5 @@
 import shutil as fs
-# import requests as req
-# import py7zr as sz
 import fontforge as ff
-# import os
-# import json
-# import wget
 
 
 DOWNLOAD_DIR = '/tmp'

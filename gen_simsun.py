@@ -83,3 +83,9 @@ def gen_simsun_ext():
     set_simsun_ext_names(font)
 
     font.generate(OUTPUT_DIR + '/simsunb.ttf')
+
+
+if __name__ == '__main__':
+    gen_simsun.gen_simsun()
+    gen_simsun.gen_simsun_ext()
+    print('simsun generated')
