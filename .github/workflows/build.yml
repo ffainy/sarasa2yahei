@@ -27,17 +27,17 @@ jobs:
           fontforge --version
           /usr/bin/python3 -c "import fontforge;print(fontforge)"
 
-      - name: Get Upstream Version
-        run: |
-          UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
-          echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
-          echo ${UPSTREAM_VERSION}
+      # - name: Get Upstream Version
+      #   run: |
+      #     UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
+      #     echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
+      #     echo ${UPSTREAM_VERSION}
 
-      - name: Find Download URL
-        run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
-          echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
-          echo ${DOWNLOAD_URL}
+      # - name: Find Download URL
+      #   run: |
+      #     DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
+      #     echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
+      #     echo ${DOWNLOAD_URL}
 
       # - name: Download and Extract Fonts
       #   run: |
