@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         pacman -Syu --noconfirm git fontforge curl p7zip jq python-py7zr python-requests
-        sudo pacman -S wget
+        pacman -S wget
 
 
 
