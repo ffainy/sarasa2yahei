@@ -52,13 +52,12 @@ jobs:
 
       - name: Run script
         run: |
-          python3 --version && python3 -m pip --version && fontforge --version
           python3 gen_yahei.py
-          ls -a
 
       - name: Create archive
         run: |
           cd /tmp/out
+          ls -a
           7z a sarasa2yahei.7z *.ttc *.ttf
 
       - name: Create Release
@@ -79,5 +78,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /tmp/out/sarasa2yahei.7z
-          asset_name: sarasa2yahei.7z
+          asset_name: sarasa2yahei-${{ env.UPSTREAM_VERSION }}.7z
           asset_content_type: application/x-7z-compressed
