@@ -23,7 +23,7 @@ jobs:
           pip install --upgrade pip
           pip install py7zr
           pip install requests
-          pip install fontforge
+          apt-get install python3-fontforge
 
       - name: Get Upstream Version
         run: |
