@@ -49,7 +49,7 @@ jobs:
 
       - name: Run script
         run: |
-          python3 exec.py
+          python3 exec_sc.py
 
       - name: Create sc archives
         run: |
