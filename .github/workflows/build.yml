@@ -21,7 +21,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
           pip install py7zr
           pip install requests
           pacman -Syu --noconfirm fontforge curl p7zip jq
