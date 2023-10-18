@@ -20,9 +20,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository ppa:fontforge/fontforge
-          sudo apt-get install -y python3 fontforge python3-fontforge
+          sudo apt-get install -y fontforge python3-fontforge
 
 
 
