@@ -29,9 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get update
-          apt-get upgrade -y
-          apt-get install -y python2.7 python-pip fontforge
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y python2.7 python-pip fontforge
           pip install configparser
 
       # - name: Get Upstream Version
