@@ -10,44 +10,44 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - run: python3 --version && python3 -m pip --version
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: '3.10'
+      # - run: python3 --version && python3 -m pip --version
 
       - name: Install Dependencies
         run: |
           sudo apt-get install -y software-properties-common
-          sudo apt-get install -y python3-fontforge
-          /usr/bin/python3 -c "import fontforge;print(fontforge)"
-          fontforge --version
+          sudo add-apt-repository ppa:fontforge/fontforge
+          sudo apt-get install -y python3 fontforge python3-fontforge
+          python3 --version && python3 -m pip --version && fontforge --version
 
 
 
 
-      # - name: Get Upstream Version
-      #   run: |
-      #     UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
-      #     echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
-      #     echo ${UPSTREAM_VERSION}
+      - name: Get Upstream Version
+        run: |
+          UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
+          echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
+          echo ${UPSTREAM_VERSION}
 
-      # - name: Find Download URL
-      #   run: |
-      #     DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
-      #     echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
-      #     echo ${DOWNLOAD_URL}
+      - name: Find Download URL
+        run: |
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
+          echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
+          echo ${DOWNLOAD_URL}
 
-      # - name: Download and Extract Fonts
-      #   run: |
-      #     cd /tmp
-      #     curl -Lvo fonts.7z $DOWNLOAD_URL
-      #     sha1sum fonts.7z
-      #     ls -a
-      #     7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
-      #     ls -a
+      - name: Download and Extract Fonts
+        run: |
+          cd /tmp
+          curl -Lvo fonts.7z $DOWNLOAD_URL
+          sha1sum fonts.7z
+          ls -a
+          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
+          ls -a
 
       - name: Run sarasa2yahei.py
         run: |
