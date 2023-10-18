@@ -50,14 +50,14 @@ jobs:
           ls -a
 
       - name: Release
-      - uses: "marvinpinto/action-automatic-releases@latest"
-          with:
-            repo_token: "${{ secrets.GITHUB_TOKEN }}"
-            automatic_release_tag: ${{ env.UPSTREAM_VERSION }}
-            prerelease: false
-            title: ${{ env.UPSTREAM_VERSION }}
-            files: |
-              *.7z
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: ${{ env.UPSTREAM_VERSION }}
+          prerelease: false
+          title: ${{ env.UPSTREAM_VERSION }}
+          files: |
+            *.7z
 
       # - name: Create Release
       #   id: create_release
