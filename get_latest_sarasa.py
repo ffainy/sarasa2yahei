@@ -38,7 +38,7 @@ def download_sarasa(url):
     filename = url.split('/')[-1]
     filepath = DOWNLOAD_DIR + '/' + filename
 
-    wget.download(url, filepath)
+    # wget.download(url, filepath)
 
     return filepath
 
