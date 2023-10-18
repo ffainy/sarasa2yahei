@@ -15,7 +15,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pacman -Syu --noconfirm git fontforge curl wget p7zip jq python-py7zr python-requests python-wget
+        pacman -Syu --noconfirm git fontforge curl wget p7zip jq python-py7zr python-requests
 
 
 
@@ -29,26 +29,11 @@ jobs:
         echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
 
 
-    # - uses: actions/checkout@v3
-    # - uses: actions/setup-python@v4
-    # - uses: BSFishy/pip-action@v1
-    #   with:
-    #     packages: |
-    #       wget
-    #       py7zr
-    #       requests
-    #       fontforge
-    #     upgrade: true
-    # - run: python3 sarasa2yahei.py
+    - name: Download original sarasa fonts
+      run: curl -Lvo /tmp/sarasafonts/ttc.7z $DOWNLOAD_URL
 
-
-
-
-
-
-
-    # - name: Extract font
-    #   run: 7z x -odata /tmp/ttc.7z
+    - name: Extract original sarasa fonts
+      run: 7z x -odata /tmp/sarasafonts/ttc.7z
 
     - name: Run script
       run: python3 sarasa2yahei.py
