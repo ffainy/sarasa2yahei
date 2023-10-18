@@ -24,6 +24,7 @@ jobs:
           pip install py7zr
           pip install requests
           sudo apt-get install p7zip
+          sudo apt -y install pacman
           pacman -Syu --noconfirm fontforge
           apt list --installed | grep forge
 
