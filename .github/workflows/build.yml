@@ -23,8 +23,9 @@ jobs:
           pip install --upgrade pip
           sudo apt-get install python3-fontforge
           sudo apt-get install p7zip
-          apt list --installed | grep forge
+          apt list | grep fontforge
           fontforge --version
+          /usr/bin/python3 -c "import fontforge;print(fontforge)"
 
       - name: Get Upstream Version
         run: |
