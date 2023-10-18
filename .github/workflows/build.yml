@@ -45,10 +45,10 @@ jobs:
       #     7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
       #     ls -a
 
-      # - name: Run sarasa2yahei.py
-      #   run: |
-      #     mkdir /tmp/out
-      #     python3 gen_yahei.py
+      - name: Run sarasa2yahei.py
+        run: |
+          mkdir /tmp/out
+          python3 gen_yahei.py
 
       # - name: Create sarasa2yahei.7z Archive
       #   run: |
