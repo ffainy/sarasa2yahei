@@ -59,10 +59,10 @@ jobs:
     #     7z a ../sarasa2yahei.7z *
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: sarasa2yahei
-        path: /tmp/sarasafonts/out/sarasa2yahei.7z
+        path: out
 
     - name: Upload release
       uses: marvinpinto/action-automatic-releases@latest
