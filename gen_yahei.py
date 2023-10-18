@@ -172,3 +172,10 @@ def gen_yahei_bold():
     set_bold_ui_names(font_ui)
 
     font.generateTtc(OUTPUT_DIR + '/msyhbd.ttc', font_ui, ttcflags = ('merge'), layer = 1)
+
+
+if __name__ == '__main__':
+    gen_yahei_regular()
+    gen_yahei_bold()
+    gen_yahei_light()
+    print('yahei generated')
