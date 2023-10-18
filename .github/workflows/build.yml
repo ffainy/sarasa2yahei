@@ -16,11 +16,22 @@ jobs:
         run: |
           sudo apt-get install -y fontforge python3-fontforge p7zip-full
 
+      - name: Get Local Version
+        run: |
+          LOCAL_VERSION=$(git describe --tags --abbrev=0)
+          echo "LOCAL_VERSION=${LOCAL_VERSION}" >> $GITHUB_ENV
+
       - name: Get Upstream Version
         run: |
           UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
           echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
-          echo ${UPSTREAM_VERSION}
+
+      - name: Compare Version
+        run: |
+          echo ${LOCAL_VERSION} && echo ${UPSTREAM_VERSION}
+          if ["${LOCAL_VERSION}" == "${UPSTREAM_VERSION}"]; then
+            exit 0
+          fi
 
       - name: Get Download URL
         run: |
@@ -30,55 +41,49 @@ jobs:
 
       - name: Download and Extract Fonts
         run: |
-          mkdir /tmp/out
-          cd /tmp
+          mkdir /tmp/fonts
+          mkdir /tmp/fonts/cl
+          mkdir /tmp/fonts/sc
+          cd /tmp/fonts
           curl -Lvo fonts.7z $DOWNLOAD_URL
-          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
+          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf sarasa-ui-sc-regular.ttf sarasa-ui-sc-light.ttf sarasa-ui-sc-bold.ttf
 
       - name: Run script
         run: |
-          python3 gen_yahei.py
-          python3 gen_simsun.py
+          python3 exec.py
 
-      - name: Create archive
+      - name: Create cl archives
         run: |
-          cd /tmp/out
+          cd /tmp/fonts/cl
           ls -a
-          7z a yahei.7z msyh*
-          7z a simsun.7z simsun*
-          7z a all.7z *.ttc *.ttf
+          7z a yahei-cl-unhinted.7z msyh*
+          7z a simsun-cl-unhinted.7z simsun*
+          7z a all-cl-unhinted.7z *.ttc *.ttf
           ls -a
+
+      - name: Create sc archives
+        run: |
+          cd /tmp/fonts/sc
+          ls -a
+          7z a yahei-sc-unhinted.7z msyh*
+          7z a simsun_sc-unhinted.7z simsun*
+          7z a all_sc-unhinted.7z *.ttc *.ttf
+          ls -a
+
+      - name: Create hash
+        run: |
+          touch /tmp/fonts/hash
+          find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/hash
+          find /tmp/fonts/sc -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/hash
 
       - name: Release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: ${{ env.UPSTREAM_VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.UPSTREAM_VERSION }}
           prerelease: false
-          title: ${{ env.UPSTREAM_VERSION }}
+          name: sarasa2yahei-${{ env.UPSTREAM_VERSION }}
           files: |
-            /tmp/out/*.7z
-
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ env.UPSTREAM_VERSION }}
-      #     release_name: Release ${{ env.UPSTREAM_VERSION }}
-      #     draft: false
-      #     prerelease: false
-
-      # - name: Upload Asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: |
-      #       /tmp/out/yahei.7z
-      #       /tmp/out/simsun.7z
-      #       /tmp/out/all.7z
-      #     asset_name: sarasa2yahei-${{ env.UPSTREAM_VERSION }}.7z
-      #     asset_content_type: application/x-7z-compressed
+            /tmp/fonts/hash
+            /tmp/fonts/cl/*.7z
+            /tmp/fonts/sc/*.7z

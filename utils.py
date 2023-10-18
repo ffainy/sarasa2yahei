@@ -1,6 +1,4 @@
-import shutil as fs
 import fontforge as ff
-
 
 DOWNLOAD_DIR = '/tmp'
 OUTPUT_DIR = '/tmp/out'
@@ -20,7 +18,7 @@ def get_version(font):
     return font.version.split(';')[0]
 
 
-def set_regular_names(font):
+def set_yahei_regular_names(font):
     font.fontname = 'MicrosoftYaHei'
     font.familyname = 'Microsoft YaHei'
     font.fullname = 'Microsoft YaHei'
@@ -37,7 +35,7 @@ def set_regular_names(font):
         ('Chinese (PRC)', 'Fullname', '微软雅黑')
     )
 
-def set_regular_ui_names(font):
+def set_yahei_regular_ui_names(font):
     font.fontname = 'MicrosoftYaHeiUI'
     font.familyname = 'Microsoft YaHei UI'
     font.fullname = 'Microsoft YaHei UI'
@@ -54,7 +52,7 @@ def set_regular_ui_names(font):
         ('Chinese (PRC)', 'Fullname', '微软雅黑 UI')
     )
 
-def set_light_names(font):
+def set_yahei_light_names(font):
     font.fontname = 'MicrosoftYaHeiLight'
     font.familyname = 'Microsoft YaHei'
     font.fullname = 'Microsoft YaHei Light'
@@ -71,7 +69,7 @@ def set_light_names(font):
         ('Chinese (PRC)', 'Fullname', '微软雅黑 Light')
     )
 
-def set_light_ui_names(font):
+def set_yahei_light_ui_names(font):
     font.fontname = 'MicrosoftYaHeiUILight'
     font.familyname = 'Microsoft YaHei UI'
     font.fullname = 'Microsoft YaHei UI Light'
@@ -88,7 +86,7 @@ def set_light_ui_names(font):
         ('Chinese (PRC)', 'Fullname', '微软雅黑 UI Light')
     )
 
-def set_bold_names(font):
+def set_yahei_bold_names(font):
     font.fontname = 'MicrosoftYaHeiBold'
     font.familyname = 'Microsoft YaHei'
     font.fullname = 'Microsoft YaHei Bold'
@@ -105,7 +103,7 @@ def set_bold_names(font):
         ('Chinese (PRC)', 'Fullname', '微软雅黑 Bold')
     )
 
-def set_bold_ui_names(font):
+def set_yahei_bold_ui_names(font):
     font.fontname = 'MicrosoftYaHeiUIBold'
     font.familyname = 'Microsoft YaHei UI'
     font.fullname = 'Microsoft YaHei UI Bold'
@@ -123,54 +121,54 @@ def set_bold_ui_names(font):
     )
 
 
-def gen_yahei_regular():
-    fs.copy(DOWNLOAD_DIR + '/sarasa-ui-cl-regular.ttf', DOWNLOAD_DIR + '/sarasa-ui-cl-regular-ui.ttf')
+def set_simsun_names(font):
+    font.fontname = 'SimSun'
+    font.familyname = 'SimSun'
+    font.fullname = 'SimSun'
+    font.version = get_version(font)
+    font.copyright = COPYRIGHT
+    font.sfnt_names = (
+        ('English (US)', 'Copyright', COPYRIGHT),
+        ('English (US)', 'Family', 'SimSun'),
+        ('English (US)', 'SubFamily', 'Regular'),
+        ('English (US)', 'UniqueID', 'SimSun'),
+        ('English (US)', 'Fullname', 'SimSun'),
+        ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'PostScriptName', 'SimSun'),
+        ('Chinese (PRC)', 'Family', '宋体'),
+        ('Chinese (PRC)', 'Fullname', '宋体')
+    )
 
-    font = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-regular.ttf')
-    remove_gasp(font)
-    set_cleartype(font)
-    set_regular_names(font)
+def set_new_simsun_names(font):
+    font.fontname = 'NSimSun'
+    font.familyname = 'NSimSun'
+    font.fullname = 'NSimSun'
+    font.version = get_version(font)
+    font.copyright = COPYRIGHT
+    font.sfnt_names = (
+        ('English (US)', 'Copyright', COPYRIGHT),
+        ('English (US)', 'Family', 'NSimSun'),
+        ('English (US)', 'SubFamily', 'Regular'),
+        ('English (US)', 'UniqueID', 'NSimSun'),
+        ('English (US)', 'Fullname', 'NSimSun'),
+        ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'PostScriptName', 'NSimSun'),
+        ('Chinese (PRC)', 'Family', '新宋体'),
+        ('Chinese (PRC)', 'Fullname', '新宋体')
+    )
 
-    font_ui = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-regular-ui.ttf')
-    remove_gasp(font_ui)
-    set_cleartype(font_ui)
-    set_regular_ui_names(font_ui)
-
-    font.generateTtc(OUTPUT_DIR + '/msyh.ttc', font_ui, ttcflags = ('merge'), layer = 1)
-
-def gen_yahei_light():
-    fs.copy(DOWNLOAD_DIR + '/sarasa-ui-cl-light.ttf', DOWNLOAD_DIR + '/sarasa-ui-cl-light-ui.ttf')
-
-    font = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-light.ttf')
-    remove_gasp(font)
-    set_cleartype(font)
-    set_light_names(font)
-
-    font_ui = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-light-ui.ttf')
-    remove_gasp(font_ui)
-    set_cleartype(font_ui)
-    set_light_ui_names(font_ui)
-
-    font.generateTtc(OUTPUT_DIR + '/msyhl.ttc', font_ui, ttcflags = ('merge'), layer = 1)
-
-def gen_yahei_bold():
-    fs.copy(DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf', DOWNLOAD_DIR + '/sarasa-ui-cl-bold-ui.ttf')
-
-    font = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf')
-    remove_gasp(font)
-    set_cleartype(font)
-    set_bold_names(font)
-
-    font_ui = open_font(DOWNLOAD_DIR + '/sarasa-ui-cl-bold-ui.ttf')
-    remove_gasp(font_ui)
-    set_cleartype(font_ui)
-    set_bold_ui_names(font_ui)
-
-    font.generateTtc(OUTPUT_DIR + '/msyhbd.ttc', font_ui, ttcflags = ('merge'), layer = 1)
-
-
-if __name__ == '__main__':
-    gen_yahei_regular()
-    gen_yahei_bold()
-    gen_yahei_light()
-    print('yahei generated')
+def set_simsun_ext_names(font):
+    font.fontname = 'SimSun-ExtB'
+    font.familyname = 'SimSun-ExtB'
+    font.fullname = 'SimSun-ExtB'
+    font.version = get_version(font)
+    font.copyright = COPYRIGHT
+    font.sfnt_names = (
+        ('English (US)', 'Copyright', COPYRIGHT),
+        ('English (US)', 'Family', 'SimSun-ExtB'),
+        ('English (US)', 'SubFamily', 'Regular'),
+        ('English (US)', 'UniqueID', 'SimSun-ExtB'),
+        ('English (US)', 'Fullname', 'SimSun-ExtB'),
+        ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'PostScriptName', 'SimSun-ExtB')
+    )
