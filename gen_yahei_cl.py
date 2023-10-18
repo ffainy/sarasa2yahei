@@ -16,7 +16,7 @@ def gen_yahei_regular_cl():
     utils.set_cleartype(font_ui)
     utils.set_yahei_regular_ui_names(font_ui)
 
-    font.generateTtc(utils.OUTPUT_DIR + '/msyh.ttc', font_ui, ttcflags = ('merge'), layer = 1)
+    font.generateTtc(utils.OUTPUT_DIR_CL + '/msyh.ttc', font_ui, ttcflags = ('merge'), layer = 1)
 
 def gen_yahei_light_cl():
     fs.copy(utils.DOWNLOAD_DIR + '/sarasa-ui-cl-light.ttf', utils.DOWNLOAD_DIR + '/sarasa-ui-cl-light-ui.ttf')
@@ -31,7 +31,7 @@ def gen_yahei_light_cl():
     utils.set_cleartype(font_ui)
     utils.set_yahei_light_ui_names(font_ui)
 
-    font.generateTtc(utils.OUTPUT_DIR + '/msyhl.ttc', font_ui, ttcflags = ('merge'), layer = 1)
+    font.generateTtc(utils.OUTPUT_DIR_CL + '/msyhl.ttc', font_ui, ttcflags = ('merge'), layer = 1)
 
 def gen_yahei_bold_cl():
     fs.copy(utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold.ttf', utils.DOWNLOAD_DIR + '/sarasa-ui-cl-bold-ui.ttf')
@@ -46,4 +46,4 @@ def gen_yahei_bold_cl():
     utils.set_cleartype(font_ui)
     utils.set_yahei_bold_ui_names(font_ui)
 
-    font.generateTtc(utils.OUTPUT_DIR + '/msyhbd.ttc', font_ui, ttcflags = ('merge'), layer = 1)
+    font.generateTtc(utils.OUTPUT_DIR_CL + '/msyhbd.ttc', font_ui, ttcflags = ('merge'), layer = 1)

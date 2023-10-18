@@ -15,7 +15,7 @@ def gen_simsun_sc():
     utils.set_cleartype(font_ui)
     utils.set_new_simsun_names(font_ui)
 
-    font.generateTtc(utils.OUTPUT_DIR + '/simsun.ttc', font_ui, ttcflags = ('merge'), layer = 1)
+    font.generateTtc(utils.OUTPUT_DIR_SC + '/simsun.ttc', font_ui, ttcflags = ('merge'), layer = 1)
 
 def gen_simsun_ext_sc():
     font = utils.open_font(utils.DOWNLOAD_DIR + '/sarasa-ui-sc-regular.ttf')
@@ -23,4 +23,4 @@ def gen_simsun_ext_sc():
     utils.set_cleartype(font)
     utils.set_simsun_ext_names(font)
 
-    font.generate(utils.OUTPUT_DIR + '/simsunb.ttf')
+    font.generate(utils.OUTPUT_DIR_SC + '/simsunb.ttf')
