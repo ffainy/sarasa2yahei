@@ -23,8 +23,9 @@ jobs:
           pip install --upgrade pip
           pip install py7zr
           pip install requests
-          sudo apt-get install python3-fontforge
           sudo apt-get install p7zip
+          pacman -Syu --noconfirm fontforge
+          apt list --installed | grep forge
 
       - name: Get Upstream Version
         run: |
@@ -38,42 +39,42 @@ jobs:
           echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
           echo ${DOWNLOAD_URL}
 
-      - name: Download and Extract Fonts
-        run: |
-          cd /tmp
-          curl -Lvo fonts.7z $DOWNLOAD_URL
-          sha1sum fonts.7z
-          ls -a
-          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
-          ls -a
+      # - name: Download and Extract Fonts
+      #   run: |
+      #     cd /tmp
+      #     curl -Lvo fonts.7z $DOWNLOAD_URL
+      #     sha1sum fonts.7z
+      #     ls -a
+      #     7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
+      #     ls -a
 
-      - name: Run sarasa2yahei.py
-        run: |
-          mkdir /tmp/out
-          python3 sarasa2yahei.py
+      # - name: Run sarasa2yahei.py
+      #   run: |
+      #     mkdir /tmp/out
+      #     python3 gen_yahei.py
 
-      - name: Create sarasa2yahei.7z Archive
-        run: |
-          cd /tmp/out
-          7z a sarasa2yahei.7z *.ttc *.ttf
+      # - name: Create sarasa2yahei.7z Archive
+      #   run: |
+      #     cd /tmp/out
+      #     7z a sarasa2yahei.7z *.ttc *.ttf
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.UPSTREAM_VERSION }}
-          release_name: Release ${{ env.UPSTREAM_VERSION }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.UPSTREAM_VERSION }}
+      #     release_name: Release ${{ env.UPSTREAM_VERSION }}
+      #     draft: false
+      #     prerelease: false
 
-      - name: Upload Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /tmp/out/sarasa2yahei.7z
-          asset_name: sarasa2yahei.7z
-          asset_content_type: application/x-7z-compressed
+      # - name: Upload Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: /tmp/out/sarasa2yahei.7z
+      #     asset_name: sarasa2yahei.7z
+      #     asset_content_type: application/x-7z-compressed
