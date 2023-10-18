@@ -3,7 +3,7 @@ import requests as req
 import py7zr as sz
 import os
 import json
-import wget
+#import wget
 
 
 API_URL = 'https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest'
