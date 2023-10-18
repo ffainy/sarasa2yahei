@@ -24,6 +24,7 @@ jobs:
           pip install py7zr
           pip install requests
           sudo apt-get install python3-fontforge
+          sudo apt-get install p7zip
 
       - name: Get Upstream Version
         run: |
@@ -41,7 +42,9 @@ jobs:
         run: |
           cd /tmp
           curl -Lvo fonts.7z $DOWNLOAD_URL
-          unzip fonts.7z 'sarasa-ui-cl-regular.ttf' 'sarasa-ui-cl-light.ttf' 'sarasa-ui-cl-bold.ttf'
+          sha1sum fonts.7z
+          ls -a
+          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
           ls -a
 
       - name: Run sarasa2yahei.py
