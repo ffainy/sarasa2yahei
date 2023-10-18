@@ -18,7 +18,7 @@ jobs:
 
       - name: Get Local Version
         run: |
-          LOCAL_VERSION=$(git describe --tags --abbrev=0)
+          LOCAL_VERSION=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
           echo "LOCAL_VERSION=${LOCAL_VERSION}" >> $GITHUB_ENV
 
       - name: Get Upstream Version
