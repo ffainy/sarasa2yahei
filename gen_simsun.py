@@ -3,8 +3,8 @@ import fontforge as ff
 import gen_yahei
 
 
-DOWNLOAD_DIR = '/tmp/sarasafonts'
-OUTPUT_DIR = '/tmp/sarasafonts/out'
+DOWNLOAD_DIR = '/tmp'
+OUTPUT_DIR = '/tmp/out'
 COPYRIGHT = 'sarasa2yahei'
 
 
