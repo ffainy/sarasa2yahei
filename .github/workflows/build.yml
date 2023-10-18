@@ -44,9 +44,9 @@ jobs:
         run: |
           cd /tmp/out
           ls -a
-          7z a -k yahei.7z msyh*
-          7z a -k simsun.7z simsun*
-          7z a -k all.7z *.ttc *.ttf
+          7z a yahei.7z msyh*
+          7z a simsun.7z simsun*
+          7z a all.7z *.ttc *.ttf
           ls -a
 
       - name: Create Release
