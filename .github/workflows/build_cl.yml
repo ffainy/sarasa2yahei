@@ -50,6 +50,7 @@ jobs:
       - name: Run script
         run: |
           python3 exec_cl.py
+          python3 exec_sc.py
 
       - name: Create cl archives
         run: |
@@ -69,9 +70,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.UPSTREAM_VERSION }}
+          tag_name: ${{ env.UPSTREAM_VERSION }}-cl
           prerelease: false
           name: sarasa2yahei-unhinted-${{ env.UPSTREAM_VERSION }}
           files: |
-            /tmp/fonts/hash
+            /tmp/fonts/.hash
             /tmp/fonts/cl/*.7z
