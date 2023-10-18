@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: archlinux:latest
 
     steps:
       - name: Checkout repository
@@ -21,7 +20,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pacman -Syu --noconfirm fontforge curl p7zip jq
+          pip install --upgrade pip
+          sudo apt-get install python3-fontforge
+          sudo apt-get install p7zip
+          apt list --installed | grep forge
           fontforge --version
 
       - name: Get Upstream Version
@@ -48,7 +50,7 @@ jobs:
       - name: Run sarasa2yahei.py
         run: |
           mkdir /tmp/out
-          fontforge gen_yahei.py
+          python gen_yahei.py
 
       # - name: Create sarasa2yahei.7z Archive
       #   run: |
