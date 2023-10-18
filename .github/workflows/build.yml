@@ -38,6 +38,7 @@ jobs:
       - name: Run script
         run: |
           python3 gen_yahei.py
+          python3 gen_simsun.py
 
       - name: Create archive
         run: |
