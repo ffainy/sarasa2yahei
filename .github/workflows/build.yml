@@ -1,4 +1,4 @@
-name: build sarasa2yahei cl
+name: build sarasa2yahei
 on:
   push:
     branches:
@@ -59,24 +59,31 @@ jobs:
       - name: Create cl archives
         run: |
           cd /tmp/fonts/cl
-          ls -a
           7z a yahei-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z msyh*
           7z a simsun-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z simsun*
           7z a all-cl-unhinted-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
-          ls -a
+
+      - name: Create sc archives
+        run: |
+          cd /tmp/fonts/sc
+          7z a yahei-sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z msyh*
+          7z a simsun_sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z simsun*
+          7z a all-sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
 
       - name: Create hash
         run: |
           touch /tmp/fonts/_hash
           find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/_hash
+          find /tmp/fonts/sc -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/_hash
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.UPSTREAM_VERSION }}-cl
+          tag_name: ${{ env.UPSTREAM_VERSION }}
           prerelease: false
           name: sarasa2yahei-unhinted-${{ env.UPSTREAM_VERSION }}
           files: |
             /tmp/fonts/_hash
             /tmp/fonts/cl/*.7z
+            /tmp/fonts/sc/*.7z

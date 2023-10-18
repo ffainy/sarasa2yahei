@@ -1,6 +1,5 @@
 import utils
 import shutil as fs
-import fontforge as ff
 
 
 def gen_yahei_regular_cl():
