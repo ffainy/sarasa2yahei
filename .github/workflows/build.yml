@@ -31,24 +31,26 @@ jobs:
 
 
     - name: Download original sarasa fonts
-      run: curl -Lvo /tmp/sarasafonts $DOWNLOAD_URL
+      run: curl -Lvo /tmp/ttc.7z $DOWNLOAD_URL
 
-    # - name: Extract original sarasa fonts
-    #   run: 7z x -odata /tmp/sarasafonts/ttc.7z
+    - name: Extract original sarasa fonts
+      run: 7z x -odata /tmp/ttc.7z
 
     - name: Run script
-      run: python3 sarasa2yahei.py
+      run: |
+        mkdir out
+        python3 sarasa2yahei.py
 
-    # - name: Compress font
-    #   run: |
-    #     cd out
-    #     7z a ../sarasa2yahei.7z *
+    - name: Compress font
+      run: |
+        cd out
+        7z a ../sarasa2yahei.7z *
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: sarasa2yahei
-        path: /tmp/sarasafonts/out
+        path: out
 
     - name: Upload release
       uses: marvinpinto/action-automatic-releases@latest
