@@ -49,26 +49,36 @@ jobs:
           7z a all.7z *.ttc *.ttf
           ls -a
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.UPSTREAM_VERSION }}
-          release_name: Release ${{ env.UPSTREAM_VERSION }}
-          draft: false
-          prerelease: false
+      - name: Release
+      - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ env.UPSTREAM_VERSION }}
+            prerelease: false
+            title: ${{ env.UPSTREAM_VERSION }}
+            files: |
+              *.7z
 
-      - name: Upload Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: |
-            /tmp/out/yahei.7z
-            /tmp/out/simsun.7z
-            /tmp/out/all.7z
-          asset_name: sarasa2yahei-${{ env.UPSTREAM_VERSION }}.7z
-          asset_content_type: application/x-7z-compressed
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.UPSTREAM_VERSION }}
+      #     release_name: Release ${{ env.UPSTREAM_VERSION }}
+      #     draft: false
+      #     prerelease: false
+
+      # - name: Upload Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: |
+      #       /tmp/out/yahei.7z
+      #       /tmp/out/simsun.7z
+      #       /tmp/out/all.7z
+      #     asset_name: sarasa2yahei-${{ env.UPSTREAM_VERSION }}.7z
+      #     asset_content_type: application/x-7z-compressed
