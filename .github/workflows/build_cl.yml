@@ -43,13 +43,17 @@ jobs:
         run: |
           mkdir /tmp/fonts
           mkdir /tmp/fonts/cl
+          mkdir /tmp/fonts/sc
           cd /tmp/fonts
           curl -Lvo fonts.7z $DOWNLOAD_URL
-          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf
+          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf sarasa-ui-sc-regular.ttf sarasa-ui-sc-light.ttf sarasa-ui-sc-bold.ttf
 
-      - name: Run script
+      - name: Generate cl fonts
         run: |
           python3 exec_cl.py
+
+      - name: Generate sc fonts
+        run: |
           python3 exec_sc.py
 
       - name: Create cl archives
@@ -63,8 +67,8 @@ jobs:
 
       - name: Create hash
         run: |
-          touch /tmp/fonts/.hash
-          find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/.hash
+          touch /tmp/fonts/_hash
+          find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/_hash
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -74,5 +78,5 @@ jobs:
           prerelease: false
           name: sarasa2yahei-unhinted-${{ env.UPSTREAM_VERSION }}
           files: |
-            /tmp/fonts/.hash
+            /tmp/fonts/_hash
             /tmp/fonts/cl/*.7z

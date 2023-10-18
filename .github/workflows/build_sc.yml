@@ -2,7 +2,7 @@ name: build sarasa2yahei sc
 on:
   push:
     branches:
-      - main
+      - other
 
 jobs:
   build:
@@ -57,7 +57,7 @@ jobs:
           ls -a
           7z a yahei-sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z msyh*
           7z a simsun_sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z simsun*
-          7z a all_sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
+          7z a all-sc-unhinted-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
           ls -a
 
       - name: Create hash
