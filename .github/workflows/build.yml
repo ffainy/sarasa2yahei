@@ -18,18 +18,18 @@ jobs:
 
       - name: Get Local Version
         run: |
-          LOCAL_VERSION=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
-          echo "LOCAL_VERSION=${LOCAL_VERSION}" >> $GITHUB_ENV
+          LOCAL_LATEST_TAG=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
+          echo "LOCAL_LATEST_TAG=${LOCAL_LATEST_TAG}" >> $GITHUB_ENV
 
       - name: Get Upstream Version
         run: |
-          UPSTREAM_VERSION=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
-          echo "UPSTREAM_VERSION=${UPSTREAM_VERSION}" >> $GITHUB_ENV
+          UPSTREAM_LATEST_TAG=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
+          echo "UPSTREAM_LATEST_TAG=${UPSTREAM_LATEST_TAG}" >> $GITHUB_ENV
 
       - name: Compare Version
         run: |
-          echo ${LOCAL_VERSION} && echo ${UPSTREAM_VERSION}
-          if ["${LOCAL_VERSION}" == "${UPSTREAM_VERSION}"]; then
+          echo ${LOCAL_LATEST_TAG} && echo ${UPSTREAM_LATEST_TAG}
+          if ["${LOCAL_LATEST_TAG}" == "${UPSTREAM_LATEST_TAG}"]; then
             exit 0
           fi
 
@@ -39,51 +39,72 @@ jobs:
           echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
           echo ${DOWNLOAD_URL}
 
-      - name: Download and Extract Fonts
+      - name: Download and Extract Sarasa Fonts
         run: |
           mkdir /tmp/fonts
+          DL_DIR=/tmp/fonts
+          echo "DL_DIR=${DL_DIR}" >> $GITHUB_ENV
           mkdir /tmp/fonts/cl
+          DL_DIR_CL=/tmp/fonts/cl
+          echo "DL_DIR_CL=${DL_DIR_CL}" >> $GITHUB_ENV
           mkdir /tmp/fonts/sc
-          cd /tmp/fonts
-          curl -Lvo fonts.7z $DOWNLOAD_URL
+          DL_DIR_SC=/tmp/fonts/sc
+          echo "DL_DIR_SC=${DL_DIR_SC}" >> $GITHUB_ENV
+          cd ${DL_DIR}
+          curl -Lvo fonts.7z ${DOWNLOAD_URL}
           7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf sarasa-ui-sc-regular.ttf sarasa-ui-sc-light.ttf sarasa-ui-sc-bold.ttf
 
-      - name: Generate cl fonts
+      - name: Generate Patched CL Fonts
         run: |
           python3 exec_cl.py
 
-      - name: Generate sc fonts
+      - name: Generate Patched SC Fonts
         run: |
           python3 exec_sc.py
 
-      - name: Create cl archives
+      - name: Compress CL Fonts
         run: |
-          cd /tmp/fonts/cl
-          7z a cl-unhinted-yahei-${{ env.UPSTREAM_VERSION }}.7z msyh*
-          7z a cl-unhinted-simsun-${{ env.UPSTREAM_VERSION }}.7z simsun*
-          7z a cl-unhinted-all-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
+          cd ${DL_DIR_CL}
+          7z a cl-unhinted-yahei-${UPSTREAM_LATEST_TAG}.7z msyh*
+          7z a cl-unhinted-simsun-${UPSTREAM_LATEST_TAG}.7z simsun*
+          7z a cl-unhinted-all-${UPSTREAM_LATEST_TAG}.7z *.ttc *.ttf
 
-      - name: Create sc archives
+      - name: Compress SC Fonts
         run: |
-          cd /tmp/fonts/sc
-          7z a sc-unhinted-yahei-${{ env.UPSTREAM_VERSION }}.7z msyh*
-          7z a sc-unhinted-simsun-${{ env.UPSTREAM_VERSION }}.7z simsun*
-          7z a sc-unhinted-all-${{ env.UPSTREAM_VERSION }}.7z *.ttc *.ttf
+          cd ${DL_DIR_SC}
+          7z a sc-unhinted-yahei-${UPSTREAM_LATEST_TAG}.7z msyh*
+          7z a sc-unhinted-simsun-${UPSTREAM_LATEST_TAG}.7z simsun*
+          7z a sc-unhinted-all-${UPSTREAM_LATEST_TAG}.7z *.ttc *.ttf
 
-      - name: Create hash
+      - name: Generate CL Fonts SHA-1
         run: |
-          touch /tmp/fonts/_hash
-          find /tmp/fonts/cl -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/_hash
-          find /tmp/fonts/sc -type f \( -name "*.ttc" -o -name "*.ttf" \) -exec md5sum {} + >> /tmp/fonts/_hash
+          cd ${DL_DIR_CL}
+          for file in *.7z; do
+            if [ -f "$file" ]; then
+              sha1=$(sha1sum "$file" | awk '{print $1}')
+              echo "$sha1" > "$file.sha1"
+            fi
+          done
 
-      - name: Release
+      - name: Generate SC Fonts SHA-1
+        run: |
+          cd ${DL_DIR_SC}
+          for file in *.7z; do
+            if [ -f "$file" ]; then
+              sha1=$(sha1sum "$file" | awk '{print $1}')
+              echo "$sha1" > "$file.sha1"
+            fi
+          done
+
+      - name: Release Assets
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.UPSTREAM_VERSION }}
+          tag_name: ${{ env.UPSTREAM_LATEST_TAG }}
           prerelease: false
-          name: sarasa2yahei-unhinted-${{ env.UPSTREAM_VERSION }}
+          name: sarasa2yahei-unhinted-${{ env.UPSTREAM_LATEST_TAG }}
           files: |
-            /tmp/fonts/_hash
-            /tmp/fonts/cl/*.7z
-            /tmp/fonts/sc/*.7z
+            ${{ env.DL_DIR_CL }}/*.7z
+            ${{ env.DL_DIR_CL }}/*.sha1
+            ${{ env.DL_DIR_SC }}/*.7z
+            ${{ env.DL_DIR_SC }}/*.sha1
