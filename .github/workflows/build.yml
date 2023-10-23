@@ -5,106 +5,104 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  build:
+  job1:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    outputs:
+      local_tag: ${{ steps.get_local_tag.outputs.tag }}
+      upstream_tag: ${{ steps.get_upstream_tag.outputs.tag }}
+      download_url: ${{ steps.get_download_url.outputs.url }}
 
+    steps:
+      - name: Get Local Tag
+        id: get_local_tag
+        run: |
+          LOCAL_LATEST_TAG=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
+          echo "tag=$LOCAL_LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Get Upstream Tag
+        id: get_upstream_tag
+        run: |
+          UPSTREAM_LATEST_TAG=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
+          echo "tag=$UPSTREAM_LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Get Download URL
+        id: get_download_url
+        run: |
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
+          echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    if: ${{ needs.job1.outputs.local_tag != needs.job1.outputs.upstream_tag }}
+
+    steps:
       - name: Install Dependencies
         run: |
           sudo apt-get install -y fontforge python3-fontforge p7zip-full
 
-      - name: Get Local Version
-        run: |
-          LOCAL_LATEST_TAG=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
-          echo "LOCAL_LATEST_TAG=${LOCAL_LATEST_TAG}" >> $GITHUB_ENV
-
-      - name: Get Upstream Version
-        run: |
-          UPSTREAM_LATEST_TAG=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
-          echo "UPSTREAM_LATEST_TAG=${UPSTREAM_LATEST_TAG}" >> $GITHUB_ENV
-
-      - name: Compare Version
-        run: |
-          echo ${LOCAL_LATEST_TAG} && echo ${UPSTREAM_LATEST_TAG}
-          if ["${LOCAL_LATEST_TAG}" == "${UPSTREAM_LATEST_TAG}"]; then
-            exit 0
-          fi
-
-      - name: Get Download URL
-        run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
-          echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
-          echo ${DOWNLOAD_URL}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Download and Extract Sarasa Fonts
         run: |
           mkdir /tmp/fonts
           DL_DIR=/tmp/fonts
-          echo "DL_DIR=${DL_DIR}" >> $GITHUB_ENV
+          echo "DL_DIR=$DL_DIR" >> $GITHUB_ENV
           mkdir /tmp/fonts/cl
           DL_DIR_CL=/tmp/fonts/cl
-          echo "DL_DIR_CL=${DL_DIR_CL}" >> $GITHUB_ENV
+          echo "DL_DIR_CL=$DL_DIR_CL" >> $GITHUB_ENV
           mkdir /tmp/fonts/sc
           DL_DIR_SC=/tmp/fonts/sc
-          echo "DL_DIR_SC=${DL_DIR_SC}" >> $GITHUB_ENV
-          cd ${DL_DIR}
-          curl -Lvo fonts.7z ${DOWNLOAD_URL}
+          echo "DL_DIR_SC=$DL_DIR_SC" >> $GITHUB_ENV
+          cd $DL_DIR
+          echo $DL_DIR && echo $DL_DIR_CL && echo $DL_DIR_SC
+          curl -Lvo fonts.7z ${{ needs.job1.outputs.download_url }}
           7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf sarasa-ui-sc-regular.ttf sarasa-ui-sc-light.ttf sarasa-ui-sc-bold.ttf
 
       - name: Generate Patched CL Fonts
         run: |
           python3 exec_cl.py
 
+      - name: Compress CL Fonts
+        run: |
+          cd $DL_DIR_CL
+          7z a cl-unhinted-yahei-${{ needs.job1.outputs.upstream_tag }}.7z msyh*
+          7z a cl-unhinted-simsun-${{ needs.job1.outputs.upstream_tag }}.7z simsun*
+          7z a cl-unhinted-all-${{ needs.job1.outputs.upstream_tag }}.7z *.ttc *.ttf
+
       - name: Generate Patched SC Fonts
         run: |
           python3 exec_sc.py
 
-      - name: Compress CL Fonts
-        run: |
-          cd ${DL_DIR_CL}
-          7z a cl-unhinted-yahei-${UPSTREAM_LATEST_TAG}.7z msyh*
-          7z a cl-unhinted-simsun-${UPSTREAM_LATEST_TAG}.7z simsun*
-          7z a cl-unhinted-all-${UPSTREAM_LATEST_TAG}.7z *.ttc *.ttf
-
       - name: Compress SC Fonts
         run: |
-          cd ${DL_DIR_SC}
-          7z a sc-unhinted-yahei-${UPSTREAM_LATEST_TAG}.7z msyh*
-          7z a sc-unhinted-simsun-${UPSTREAM_LATEST_TAG}.7z simsun*
-          7z a sc-unhinted-all-${UPSTREAM_LATEST_TAG}.7z *.ttc *.ttf
+          cd $DL_DIR_SC
+          7z a sc-unhinted-yahei-${{ needs.job1.outputs.upstream_tag }}.7z msyh*
+          7z a sc-unhinted-simsun-${{ needs.job1.outputs.upstream_tag }}.7z simsun*
+          7z a sc-unhinted-all-${{ needs.job1.outputs.upstream_tag }}.7z *.ttc *.ttf
 
-      - name: Generate CL Fonts SHA-1
+      - name: Calculate SHA1
         run: |
-          cd ${DL_DIR_CL}
-          for file in *.7z; do
-            if [ -f "$file" ]; then
-              sha1=$(sha1sum "$file" | awk '{print $1}')
-              echo "$sha1" > "$file.sha1"
-            fi
-          done
-
-      - name: Generate SC Fonts SHA-1
-        run: |
-          cd ${DL_DIR_SC}
-          for file in *.7z; do
-            if [ -f "$file" ]; then
-              sha1=$(sha1sum "$file" | awk '{print $1}')
-              echo "$sha1" > "$file.sha1"
-            fi
-          done
+          cd $DL_DIR
+          find "$DL_DIR_CL" "$DL_DIR_SC" -type f -name "*.7z" > filelist.txt
+          while read -r file; do
+            filename=$(basename "$file")
+            sha1=$(sha1sum "$file" | awk '{print $1}')
+            echo "$filename: $sha1" >> sha1.txt
+          done < filelist.txt
 
       - name: Release Assets
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.UPSTREAM_LATEST_TAG }}
+          tag_name: ${{ needs.job1.outputs.upstream_tag }}
           prerelease: false
-          name: sarasa2yahei-unhinted-${{ env.UPSTREAM_LATEST_TAG }}
+          name: sarasa2yahei-unhinted-${{ needs.job1.outputs.upstream_tag }}
+          body_path: ${{ env.DL_DIR }}/sha1.txt
           files: |
             ${{ env.DL_DIR_CL }}/*.7z
-            ${{ env.DL_DIR_CL }}/*.sha1
             ${{ env.DL_DIR_SC }}/*.7z
-            ${{ env.DL_DIR_SC }}/*.sha1
+
+
