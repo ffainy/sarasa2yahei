@@ -90,7 +90,7 @@ jobs:
           while read -r file; do
             filename=$(basename "$file")
             sha1=$(sha1sum "$file" | awk '{print $1}')
-            echo "$filename: $sha1" >> sha1.txt
+            echo "- $filename: \`$sha1\`" >> sha1.txt
           done < filelist.txt
 
       - name: Release Assets
