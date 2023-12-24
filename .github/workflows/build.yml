@@ -29,7 +29,7 @@ jobs:
       - name: Get Download URL
         id: get_download_url
         run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("ttf-unhinted")) | .browser_download_url')
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("TTF-Unhinted")) | .browser_download_url')
           echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
 
   job2:
@@ -59,7 +59,7 @@ jobs:
           cd $DL_DIR
           echo $DL_DIR && echo $DL_DIR_CL && echo $DL_DIR_SC
           curl -Lvo fonts.7z ${{ needs.job1.outputs.download_url }}
-          7z e fonts.7z sarasa-ui-cl-regular.ttf sarasa-ui-cl-light.ttf sarasa-ui-cl-bold.ttf sarasa-ui-sc-regular.ttf sarasa-ui-sc-light.ttf sarasa-ui-sc-bold.ttf
+          7z e fonts.7z SarasaUiCL-Regular.ttf SarasaUiCL-Light.ttf SarasaUiCL-Bold.ttf SarasaUiSC-Regular.ttf SarasaUiSC-Light.ttf SarasaUiSC-Bold.ttf
 
       - name: Generate Patched CL Fonts
         run: |
@@ -90,7 +90,7 @@ jobs:
           while read -r file; do
             filename=$(basename "$file")
             sha1=$(sha1sum "$file" | awk '{print $1}')
-            echo "- $filename: \`$sha1\`" >> sha1.txt
+            echo "> - $filename: \`$sha1\`" >> sha1.txt
           done < filelist.txt
 
       - name: Release Assets
