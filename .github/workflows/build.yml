@@ -70,7 +70,6 @@ jobs:
           cd $DL_DIR_CL
           7z a cl-unhinted-yahei-${{ needs.job1.outputs.upstream_tag }}.7z msyh*
           7z a cl-unhinted-simsun-${{ needs.job1.outputs.upstream_tag }}.7z simsun*
-          7z a cl-unhinted-all-${{ needs.job1.outputs.upstream_tag }}.7z *.ttc *.ttf
 
       - name: Generate Patched SC Fonts
         run: |
@@ -81,7 +80,6 @@ jobs:
           cd $DL_DIR_SC
           7z a sc-unhinted-yahei-${{ needs.job1.outputs.upstream_tag }}.7z msyh*
           7z a sc-unhinted-simsun-${{ needs.job1.outputs.upstream_tag }}.7z simsun*
-          7z a sc-unhinted-all-${{ needs.job1.outputs.upstream_tag }}.7z *.ttc *.ttf
 
       - name: Calculate SHA1
         run: |
