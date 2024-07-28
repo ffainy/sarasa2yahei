@@ -129,12 +129,12 @@ def set_simsun_names(font):
     font.version = get_version(font)
     font.copyright = COPYRIGHT
     font.sfnt_names = (
-        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'Family', 'SimSun'),
-        ('English (US)', 'SubFamily', 'Regular'),
-        ('English (US)', 'UniqueID', 'SimSun'),
         ('English (US)', 'Fullname', 'SimSun'),
+        ('English (US)', 'UniqueID', 'SimSun'),
+        ('English (US)', 'SubFamily', 'Regular'),
         ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'PostScriptName', 'SimSun'),
         ('Chinese (PRC)', 'Family', '宋体'),
         ('Chinese (PRC)', 'Fullname', '宋体')
@@ -147,12 +147,12 @@ def set_new_simsun_names(font):
     font.version = get_version(font)
     font.copyright = COPYRIGHT
     font.sfnt_names = (
-        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'Family', 'NSimSun'),
-        ('English (US)', 'SubFamily', 'Regular'),
-        ('English (US)', 'UniqueID', 'NSimSun'),
         ('English (US)', 'Fullname', 'NSimSun'),
+        ('English (US)', 'UniqueID', 'NSimSun'),
+        ('English (US)', 'SubFamily', 'Regular'),
         ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'PostScriptName', 'NSimSun'),
         ('Chinese (PRC)', 'Family', '新宋体'),
         ('Chinese (PRC)', 'Fullname', '新宋体')
@@ -165,11 +165,11 @@ def set_simsun_ext_names(font):
     font.version = get_version(font)
     font.copyright = COPYRIGHT
     font.sfnt_names = (
-        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'Family', 'SimSun-ExtB'),
-        ('English (US)', 'SubFamily', 'Regular'),
-        ('English (US)', 'UniqueID', 'SimSun-ExtB'),
         ('English (US)', 'Fullname', 'SimSun-ExtB'),
+        ('English (US)', 'UniqueID', 'SimSun-ExtB'),
+        ('English (US)', 'SubFamily', 'Regular'),
         ('English (US)', 'Version', get_version(font)),
+        ('English (US)', 'Copyright', COPYRIGHT),
         ('English (US)', 'PostScriptName', 'SimSun-ExtB')
     )
