@@ -11,26 +11,37 @@ jobs:
     outputs:
       local_tag: ${{ steps.get_local_tag.outputs.tag }}
       upstream_tag: ${{ steps.get_upstream_tag.outputs.tag }}
-      download_url: ${{ steps.get_download_url.outputs.url }}
+      sc_download_url: ${{ steps.get_sc_download_url.outputs.url }}
+      cl_download_url: ${{ steps.get_cl_download_url.outputs.url }}
 
     steps:
       - name: Get Local Tag
         id: get_local_tag
         run: |
-          LOCAL_LATEST_TAG=$(curl -s https://api.github.com/repos/neotpravlennoye/sarasa2yahei/releases/latest | jq -r '.tag_name')
+          LOCAL_LATEST_TAG=$(curl -s https://api.github.com/repos/ffainy/sarasa2yahei/releases/latest | jq -r '.tag_name')
           echo "tag=$LOCAL_LATEST_TAG" >> "$GITHUB_OUTPUT"
+          echo $LOCAL_LATEST_TAG
 
       - name: Get Upstream Tag
         id: get_upstream_tag
         run: |
           UPSTREAM_LATEST_TAG=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.tag_name')
           echo "tag=$UPSTREAM_LATEST_TAG" >> "$GITHUB_OUTPUT"
+          echo $UPSTREAM_LATEST_TAG
 
-      - name: Get Download URL
-        id: get_download_url
+      - name: Get SC Download URL
+        id: get_sc_download_url
         run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("TTF-Unhinted")) | .browser_download_url')
-          echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+          DOWNLOAD_URL_SC=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("SarasaUiSC-TTF-Unhinted")) | .browser_download_url')
+          echo "url=$DOWNLOAD_URL_SC" >> "$GITHUB_OUTPUT"
+          echo $DOWNLOAD_URL_SC
+
+      - name: Get CL Download URL
+        id: get_cl_download_url
+        run: |
+          DOWNLOAD_URL_CL=$(curl -s https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r '.assets[] | select(.name | contains("SarasaUiCL-TTF-Unhinted")) | .browser_download_url')
+          echo "url=$DOWNLOAD_URL_CL" >> "$GITHUB_OUTPUT"
+          echo $DOWNLOAD_URL_CL
 
   job2:
     runs-on: ubuntu-latest
@@ -58,8 +69,15 @@ jobs:
           echo "DL_DIR_SC=$DL_DIR_SC" >> $GITHUB_ENV
           cd $DL_DIR
           echo $DL_DIR && echo $DL_DIR_CL && echo $DL_DIR_SC
-          curl -Lvo fonts.7z ${{ needs.job1.outputs.download_url }}
-          7z e fonts.7z SarasaUiCL-Regular.ttf SarasaUiCL-Light.ttf SarasaUiCL-Bold.ttf SarasaUiSC-Regular.ttf SarasaUiSC-Light.ttf SarasaUiSC-Bold.ttf
+          curl -Lvo sc-fonts.7z ${{ needs.job1.outputs.sc_download_url }}
+          7z e sc-fonts.7z SarasaUiSC-Regular.ttf SarasaUiSC-Light.ttf SarasaUiSC-Bold.ttf
+          curl -Lvo cl-fonts.7z ${{ needs.job1.outputs.cl_download_url }}
+          7z e cl-fonts.7z SarasaUiCL-Regular.ttf SarasaUiCL-Light.ttf SarasaUiCL-Bold.ttf
+          for file in *; do
+            if [ -f "$file" ]; then
+              echo $file
+            fi
+          done
 
       - name: Generate Patched CL Fonts
         run: |
@@ -92,7 +110,7 @@ jobs:
           done < filelist.txt
 
       - name: Release Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ needs.job1.outputs.upstream_tag }}
